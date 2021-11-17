@@ -34,7 +34,9 @@
           <input type="text" v-model="currentPlace.address" />
         </p>
         <button v-on:click="updatePlace(currentPlace)">Update Place</button>
-        <!-- <button v-on:click="destroyPlace(currentPlace)">Delete</button> -->
+        |
+        <button v-on:click="deletePlace(currentPlace)">Delete</button>
+        |
         <button>Close</button>
       </form>
     </dialog>
@@ -74,10 +76,19 @@ export default {
         .catch((error) => console.log(error.response));
     },
     showPlace: function (place) {
-      axios.get("http://localhost:3000/places/" + place.id, place).then((response) => {
-        this.currentPlace = place;
-        document.querySelector("#place-details").showModal();
+      this.currentPlace = place;
+      document.querySelector("#place-details").showModal();
+    },
+    updatePlace: function (place) {
+      axios.put("http://localhost:3000/places/" + place.id, place).then((response) => {
         console.log("succes1", response.data);
+      });
+    },
+    deletePlace: function (place) {
+      axios.delete("http://localhost:3000/places/" + place.id).then((response) => {
+        console.log("Success!", response.data);
+        var index = this.places.indexOf(place);
+        this.places.splice(index, 1);
       });
     },
   },
